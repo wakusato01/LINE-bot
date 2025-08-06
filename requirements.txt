@@ -1,0 +1,4 @@
+# requirements.txt
+line-bot-sdk
+Flask
+gunicorn
