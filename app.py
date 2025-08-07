@@ -8,6 +8,7 @@ from linebot.v3.messaging import (
     ApiClient,
     MessagingApi,
     PushMessageRequest,
+    ReplyMessageRequest,  # ★追加: ReplyMessageRequestをインポート
     TextMessage
 )
 from linebot.v3.webhooks import MessageEvent, TextMessageContent, FollowEvent
@@ -60,12 +61,14 @@ def handle_message(event):
         
     print(f"現在のユーザーIDリスト: {user_ids}")
     
-    # ユーザーIDをそのまま返信
+    # ★修正箇所: ReplyMessageRequestオブジェクトを作成して返信
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
         line_bot_api.reply_message(
-            reply_token=event.reply_token,
-            messages=[TextMessage(text=f"あなたのIDは {user_id} です。")]
+            ReplyMessageRequest(
+                reply_token=event.reply_token,
+                messages=[TextMessage(text=f"あなたのIDは {user_id} です。")]
+            )
         )
 
 # --- 3. ユーザーが友達追加した時の処理 ---
@@ -84,12 +87,14 @@ def handle_follow(event):
     
     print(f"現在のユーザーIDリスト: {user_ids}")
     
-    # 友達追加時に挨拶メッセージを返す
+    # ★修正箇所: ReplyMessageRequestオブジェクトを作成して返信
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
         line_bot_api.reply_message(
-            reply_token=event.reply_token,
-            messages=[TextMessage(text="友達追加ありがとうございます！")]
+            ReplyMessageRequest(
+                reply_token=event.reply_token,
+                messages=[TextMessage(text="友達追加ありがとうございます！")]
+            )
         )
 
 # --- 4. 別のアプリからプッシュメッセージの送信を指示されるエンドポイント ---
